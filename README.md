@@ -10,6 +10,10 @@ You've been left behind on a strange planet. These weird, ugly aliens that call 
 * JavaScript
 * CSS (Bootstrap)
 
+## Wireframe 
+
+![pixil-frame-0 (1)](https://user-images.githubusercontent.com/69262804/138520228-5645d709-92df-4680-99f0-952e1f8500e9.png)
+
 ## MVP Checklist
 
 * Render the starting screen with a Start button
