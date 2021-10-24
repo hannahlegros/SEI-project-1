@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: rgb(23, 22, 22);
+    font-family: 'Orbitron', sans-serif;
 }
 #container {
     display: grid;
@@ -18,19 +19,34 @@ main {
 }
 #canvas {
     background-image: url('img/stars.jpg');
+    background-size: cover;
     width: 100%;
     height: 100%;
+    min-width: 400px;
+    min-height: 300px;
 }
 #bottomRight, #bottomLeft {
     border: 10px solid darkgoldenrod;
+    font-size: 40px;
+    color: darkgoldenrod;
+    text-align: center;
+    padding: 10px;
 }
 #middleCenter {
-    background-color: rgb(17, 41, 17);
+    background-color: rgb(32, 45, 32);
     grid-area: ground;
+    height: 40px;
+    border-left: 10px solid darkgoldenrod;
+    border-right: 10px solid darkgoldenrod;
 }
 #top {
     grid-area: header;
     border: 10px solid darkgoldenrod;
+    font-size: 50px;
+    font-weight: bold;
+    color: darkgoldenrod;
+    text-align: center;
+    padding: 5px;
 }
 #bottomRight {
     grid-area: bottom-right;
