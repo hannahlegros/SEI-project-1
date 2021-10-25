@@ -36,5 +36,6 @@ You've been left behind on a strange planet. These weird, ugly creatures that ca
 ## Potential Roadblocks
 
 * Figuring out how to render gravity
+* Rendering multiple humans and boosters
 * Restart button functionality
 * Getting humans and boosters to move on their own across the screen
