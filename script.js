@@ -52,7 +52,7 @@ class Alien {
             vy + gravity
         }
         if (this.direction.up) {
-            this.y -= 15
+            this.y -= 20
         }
         if (this.y <= 0) {
             this.y = 0
@@ -81,8 +81,8 @@ class Alien {
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
-// create human characters using constructor (red)
 
+// create human characters using constructor (red)
 class Human {
     constructor(x, y, color, width, height) {
         this.x = x, 
@@ -93,22 +93,30 @@ class Human {
         this.alive = true
         // this.removeEnergy = -10
     }
+    // assign steady right to left motion to humans
+    moveHuman () {
+        this.x = (this.x)-4
+    }
     create = function () {
         ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.x, this.width, this.height)
+        ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
+
 let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
-let human = new Human((game.width)-25, (game.height)-20, '#730202', 20, 20)
+let human = new Human((game.width), (game.height-20), '#730202', 20, 20)
 // console.log('this is the alien\n', alien)
+console.log('this is the first human\n', human)
+
 // function to initiate motion on board, start game
 const playGame = () => {
     ctx.clearRect(0, 0, game.width, game.height)
+    messageBoard.innerText = "Avoid the humans!"
     alien.create()
     alien.moveAlien()
     human.create()
+    human.moveHuman()
 }
-console.log('this is the first human\n', human)
 
 const intervalForGame = setInterval(playGame, 50)
 
@@ -121,11 +129,10 @@ document.addEventListener('keyup', (e) => {
         alien.stopAlienDirection(e.key)
     }
 })
-// apply gravity force to alien so they return to the ground after "jumping"
 
 
     // have multiple humans at random intervals
-    // assign steady right to left motion to humans
+    
 // create boosters using constructor (yellow)
     // have multiple boosters at random locations
     // assign steady right to left motion to boosters
