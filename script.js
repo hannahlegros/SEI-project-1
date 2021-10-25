@@ -7,8 +7,8 @@ const vy = (Math.random() * -10) - 5
 const gravity = 0.5
 game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
-// console.log("this is game width:\n", game.width)
-// console.log("this is game height:\n", game.height)
+console.log("this is game width:\n", game.width)
+console.log("this is game height:\n", game.height)
 
 // get game context and declare it 2d
 const ctx = game.getContext('2d')
@@ -44,10 +44,12 @@ class Alien {
         if (key.toLowerCase() == 'd') this.direction.right = false
     }
     // define boundaries for alien (edges of the board)
+    // also assigning movement to key press event
+    // apply gravity force to alien so they return to the ground after "jumping"
     moveAlien () {
-        if (this.y <= game.height-15) {
+        if (this.y < game.height-15) {
             this.y -= vy
-            vy += gravity
+            vy + gravity
         }
         if (this.direction.up) {
             this.y -= 15
@@ -79,13 +81,34 @@ class Alien {
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
+// create human characters using constructor (red)
+
+class Human {
+    constructor(x, y, color, width, height) {
+        this.x = x, 
+        this.y = y, 
+        this.color = color,
+        this.width = width,
+        this.height = height,
+        this.alive = true
+        // this.removeEnergy = -10
+    }
+    create = function () {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.x, this.width, this.height)
+    }
+}
 let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
+let human = new Human((game.width)-25, (game.height)-20, '#730202', 20, 20)
 // console.log('this is the alien\n', alien)
+// function to initiate motion on board, start game
 const playGame = () => {
     ctx.clearRect(0, 0, game.width, game.height)
     alien.create()
     alien.moveAlien()
+    human.create()
 }
+console.log('this is the first human\n', human)
 
 const intervalForGame = setInterval(playGame, 50)
 
@@ -98,9 +121,9 @@ document.addEventListener('keyup', (e) => {
         alien.stopAlienDirection(e.key)
     }
 })
+// apply gravity force to alien so they return to the ground after "jumping"
 
-    // apply gravity force to alien so they return to the ground after "jumping"
-// create human characters using constructor (red)
+
     // have multiple humans at random intervals
     // assign steady right to left motion to humans
 // create boosters using constructor (yellow)
