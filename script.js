@@ -3,7 +3,8 @@ const game = document.getElementById("canvas")
 const energy = document.getElementById("bottomLeft")
 // save bottomRight square as var to display messages to player
 const messageBoard = document.getElementById("bottomRight")
-
+const vy = (Math.random() * -10) - 5
+const gravity = 0.5
 game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
 // console.log("this is game width:\n", game.width)
@@ -44,6 +45,10 @@ class Alien {
     }
     // define boundaries for alien (edges of the board)
     moveAlien () {
+        if (this.y <= game.height-15) {
+            this.y -= vy
+            vy += gravity
+        }
         if (this.direction.up) {
             this.y -= 15
         }
@@ -69,15 +74,20 @@ class Alien {
             this.x = game.width - this.width
         }
     }
-	render = function () {
+    create = function () {
         ctx.fillStyle = this.color
-		ctx.fillRect(this.x, this.y, this.width, this.height)
-	}
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+    }
 }
 let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
 // console.log('this is the alien\n', alien)
+const playGame = () => {
+    ctx.clearRect(0, 0, game.width, game.height)
+    alien.create()
+    alien.moveAlien()
+}
 
-alien.render()
+const intervalForGame = setInterval(playGame, 50)
 
 // set event listener for alien motion 
 document.addEventListener('keydown', (e) => {
