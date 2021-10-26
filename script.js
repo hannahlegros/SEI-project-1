@@ -123,13 +123,11 @@ class Booster {
     }
 }
 
-const randomizer =()=>{
-    Math.floor(Math.random(game.height)-9)
-}
+// const randomizer = Math.floor(Math.random(game.height)-9)
 
 let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
 let human = new Human((game.width), (game.height-20), "#730202", 20, 20)
-let booster = new Booster((game.width), randomizer(), "gold", 9, 9)
+let booster = new Booster((game.width), (game.height)-20, "gold", 9, 9)
 // console.log('this is the alien\n', alien)
 // console.log('this is the first human\n', human)
 
@@ -162,14 +160,24 @@ const gainBooster = () => {
     }
 }
 
+// clear game
+const stopGame = () => {
+    clearInterval(intervalForGame)
+    ctx.clearRect(0, 0, game.width, game.height)
+}
+
+// define winning conditions
+// if energy level goes above threshold, you escape!
+// define losing conditions
+// if energy level goes below threshold, you are captured :(
 const winOrLose = () => {
-    if (alien.energy>=100){
+    if (alien.energy >= 100){
         messageBoard.innerText = "Yay! You escaped the humans!"
-        //insert stopgame func
+        stopGame()
     }
-    else if (alien.energy<=0){
+    else if (alien.energy < 0){
         messageBoard.innerText = "Oh no...you've been captured."
-        // insert stopgame func
+        stopGame()
     }
 }
 
@@ -205,15 +213,6 @@ document.addEventListener('keyup', (e) => {
 
     // have multiple humans at random intervals
     
-
     // have multiple boosters at random locations
     
-
-    
-// define winning conditions
-    // if energy level goes above threshold, you escape!
-        // clear humans and boosters
-// define losing conditions
-    // if energy level goes below threshold, you are captured :(
-        // humans take you away
 // restart button
