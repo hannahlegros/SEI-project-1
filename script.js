@@ -22,7 +22,7 @@ class Alien {
 		this.width = width
 		this.height = height
 		this.alive = true
-        this.energy = energy
+        this.energy = 50
         this.direction = {
             up: false,
             left: false,
@@ -49,7 +49,7 @@ class Alien {
     moveAlien () {
         if (this.y < game.height-15) {
             this.y -= vy
-            vy + gravity
+            // vy + gravity
         }
         if (this.direction.up) {
             this.y -= 20
@@ -79,6 +79,7 @@ class Alien {
     create = function () {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.width, this.height)
+        energy.innerText = `Energy: ${alien.energy}`
     }
 }
 
@@ -91,7 +92,6 @@ class Human {
         this.width = width,
         this.height = height,
         this.alive = true
-        // this.removeEnergy = -10
     }
     // assign steady right to left motion to humans
     moveHuman () {
@@ -103,21 +103,93 @@ class Human {
     }
 }
 
-let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
-let human = new Human((game.width), (game.height-20), '#730202', 20, 20)
-// console.log('this is the alien\n', alien)
-console.log('this is the first human\n', human)
+// create boosters using constructor (yellow)
+class Booster {
+    constructor(x, y, color, width, height) {
+        this.x = x, 
+        this.y = y, 
+        this.color = color,
+        this.width = width,
+        this.height = height,
+        this.alive = true
+    }
+    // assign steady right to left motion to boosters
+    moveBooster () {
+        this.x = (this.x)-5
+    }
+    create = function () {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+    }
+}
 
+const randomizer =()=>{
+    Math.floor(Math.random(game.height)-9)
+}
+
+let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
+let human = new Human((game.width), (game.height-20), "#730202", 20, 20)
+let booster = new Booster((game.width), randomizer(), "gold", 9, 9)
+// console.log('this is the alien\n', alien)
+// console.log('this is the first human\n', human)
+
+// create collision detection
+// alien hits human: deduct energy points, turn alien red momentarily
+const humanHit = () => {
+    let alienFlash = () =>{
+        alien.color = "#148e55"
+    }
+    if (alien.x < human.x + human.width &&
+        alien.x + alien.width > human.x &&
+        alien.y < human.y + human.height &&
+        alien.y + alien.height > human.y){
+            alien.energy = (alien.energy)-10
+            alien.color = "red"
+            messageBoard.innerText = "Look out!"
+            setTimeout(alienFlash, 400)
+    }
+}
+
+// alien hits booster: add energy points, make booster disapper
+const gainBooster = () => {
+    if (alien.x < booster.x + booster.width &&
+        alien.x + alien.width > booster.x &&
+        alien.y < booster.y + booster.height &&
+        alien.y + alien.height > booster.y){
+            alien.energy = (alien.energy)+10
+            booster.alive = false
+            messageBoard.innerText = "Way to go!"
+    }
+}
+
+const winOrLose = () => {
+    if (alien.energy>=100){
+        messageBoard.innerText = "Yay! You escaped the humans!"
+        //insert stopgame func
+    }
+    else if (alien.energy<=0){
+        messageBoard.innerText = "Oh no...you've been captured."
+        // insert stopgame func
+    }
+}
+
+messageBoard.innerText = "Avoid the humans!"
 // function to initiate motion on board, start game
 const playGame = () => {
     ctx.clearRect(0, 0, game.width, game.height)
-    messageBoard.innerText = "Avoid the humans!"
     alien.create()
     alien.moveAlien()
     human.create()
     human.moveHuman()
+    if(booster.alive){
+        booster.create()
+        booster.moveBooster()
+        gainBooster()
+    }
+    humanHit()
+    winOrLose()
 }
-
+energy.innerText = `Energy: ${alien.energy}`
 const intervalForGame = setInterval(playGame, 50)
 
 // set event listener for alien motion 
@@ -133,12 +205,11 @@ document.addEventListener('keyup', (e) => {
 
     // have multiple humans at random intervals
     
-// create boosters using constructor (yellow)
+
     // have multiple boosters at random locations
-    // assign steady right to left motion to boosters
-// create collision detection
-    // alien hits human: deduct energy points, turn alien red momentarily
-    // alien hits booster: add energy points, make booster disapper
+    
+
+    
 // define winning conditions
     // if energy level goes above threshold, you escape!
         // clear humans and boosters
