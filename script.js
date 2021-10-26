@@ -3,8 +3,12 @@ const game = document.getElementById("canvas")
 const energy = document.getElementById("bottomLeft")
 // save bottomRight square as var to display messages to player
 const messageBoard = document.getElementById("bottomRight")
+// velocity on the y axis (for gravity)
 const vy = (Math.random() * -10) - 5
-const gravity = 0.5
+// save start button and explain game message field as var
+const startButton = document.getElementById("start")
+const explainGame = document.getElementById("explain")
+
 game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
 console.log("this is game width:\n", game.width)
@@ -12,7 +16,8 @@ console.log("this is game height:\n", game.height)
 
 // get game context and declare it 2d
 const ctx = game.getContext('2d')
-messageBoard.innerText = "Avoid the humans!"
+let raf
+
 
 // create alien character using constructor (green)
 class Alien {
@@ -92,19 +97,21 @@ class Human {
         this.color = color,
         this.width = width,
         this.height = height,
-        this.alive = true
+        this.alive = true,
+        this.ctx = ctx
     }
     // assign steady right to left motion to humans
     moveHuman () {
         this.x = (this.x)-4
     }
     create = function () {
-        ctx.fillStyle = "#730202"
-        ctx.fillRect((game.width), (game.height-20), 20, 20)
-        
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+        // ctx.fillStyle = "#730202"
+        // ctx.fillRect((game.width), (game.height-20), 20, 20)
     }
 }
-// let human = new Human((game.width), (game.height-20), "#730202", 20, 20)
+let human = new Human((game.width), (game.height-20), "#730202", 20, 20)
 
 // create boosters using constructor (yellow)
 class Booster {
@@ -126,9 +133,8 @@ class Booster {
     }
 }
 
-// const randomizer = Math.floor(Math.random(game.height)-9)
-
 let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
+// let human = new Human()
 let booster = new Booster((game.width), (game.height)-20, "gold", 9, 9)
 // console.log('this is the alien\n', alien)
 // console.log('this is the first human\n', human)
@@ -143,7 +149,7 @@ const humanHit = () => {
         alien.x + alien.width > human.x &&
         alien.y < human.y + human.height &&
         alien.y + alien.height > human.y){
-            alien.energy = (alien.energy)-2
+            alien.energy = (alien.energy)-4
             alien.color = "red"
             messageBoard.innerText = "Look out!"
             setTimeout(alienFlash, 400)
@@ -162,11 +168,40 @@ const gainBooster = () => {
     }
 }
 
-// clear game
-const stopGame = () => {
-    clearInterval(intervalForGame)
+// function drawf() {
+//     let humanArray1 = []
+//     for(let i = 0; i < 5; i++){
+//     humanArray1[i] = new Human()}
+//     humanArray1[0].ctx.clearRect(0, 0, game.width, game.height)
+//     humanArray1.forEach(function(human){
+//         human.create()
+//     })
+// }
+        
+// function to initiate motion on board, start game
+const playGame = () => {
     ctx.clearRect(0, 0, game.width, game.height)
+    alien.create()
+    alien.moveAlien()
+    human.create()
+    human.moveHuman()
+    // drawf()
+    // raf = window.requestAnimationFrame(drawf)
+    if(booster.alive){
+        booster.create()
+        booster.moveBooster()
+        gainBooster()
+    }
+    humanHit()
+    winOrLose()
 }
+
+const initiateGame = () =>{
+    startButton.style.visibility = "hidden"
+    explainGame.style.visibility = "hidden"
+    const intervalForGame = setInterval(playGame, 50)
+    messageBoard.innerText = "Avoid the humans!"
+} 
 
 // define winning conditions
 // if energy level goes above threshold, you escape!
@@ -183,46 +218,15 @@ const winOrLose = () => {
     }
 }
 
-let humanArray1 = []
-for(let i = 0; i < 5; i++){
-    humanArray1[i] = new Human()
-}
-function drawf() {
-    let ctxd = game.getContext('2d')
-    console.log(ctxd)
-    humanArray1[0].ctxd.clearRect(0, 0, game.width, game.height)
-    humanArray1.forEach(function(human){
-        human.create()
-        raf = window.requestAnimationFrame(drawf)
-    })
-}
-
-// function to initiate motion on board, start game
-const playGame = () => {
+// clear game
+// restart button
+const stopGame = (intervalForGame) => {
+    clearInterval(intervalForGame)
     ctx.clearRect(0, 0, game.width, game.height)
-    alien.create()
-    alien.moveAlien()
-    drawf()
-    console.log(human)
-    // while(alien.alive){
-    //     window.setInterval(() =>{
-    //         human.create(), 5000})
-    // }
-    // setInterval(humanInterval, 1000)
-    human.moveHuman()
-    if(booster.alive){
-        booster.create()
-        booster.moveBooster()
-        gainBooster()
-    }
-    humanHit()
-    winOrLose()
+    startButton.style.visibility = "visible"
+    explainGame.style.visibility = "visible"
+    explainGame.innerText = "Another round?"
 }
-
-energy.innerText = `Energy: ${alien.energy}`
-
-const intervalForGame = setInterval(playGame, 50)
-// const humanInterval = setInterval(human.create, 1000)
 
 // set event listener for alien motion 
 document.addEventListener('keydown', (e) => {
@@ -234,18 +238,10 @@ document.addEventListener('keyup', (e) => {
     }
 })
 
+// set event listener for 'Play Game' button
+document.addEventListener('click', initiateGame)
+
 
 // have multiple humans at random intervals
 
 // have multiple boosters at random locations
-
-// restart button
-
-
-
-
-// const randomNumber = () => {
-//     return ((Math.floor(Math.random)) * 5) * 200
-// }
-// console.log("this is a random number:\n", randomNumber())
-// setTimeout(human.create, randomNumber())

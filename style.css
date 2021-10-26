@@ -6,16 +6,17 @@ body {
 }
 #container {
     display: grid;
-    padding: 20px 40px 0px 40px;
+    margin: 20px 40px 0px 40px;
+    border: 10px solid darkgoldenrod;
     grid-template-areas: "header header header"
+                        "message message button"
                         "main main main"
                         "ground ground ground"
                         "bottom-left bottom-right bottom-right";
 }
 main {
     grid-area: main;
-    border-left: 10px solid darkgoldenrod;
-    border-right: 10px solid darkgoldenrod;
+    border-top: 10px solid darkgoldenrod;
 }
 #canvas {
     background-image: url('img/stars.jpg');
@@ -26,22 +27,36 @@ main {
     min-height: 300px;
 }
 #bottomRight, #bottomLeft {
-    border: 10px solid darkgoldenrod;
     font-size: 40px;
     color: darkgoldenrod;
     text-align: center;
     padding: 10px;
 }
+#explain{
+    grid-area: message;
+    border-right: 10px solid darkgoldenrod;
+    font-size: 16px;
+    color: darkgoldenrod;
+    text-align: center;
+    padding: 10px 10px 10px 10px;
+}
+button{
+    grid-area: button;
+    background-color: #730202;    
+    color: darkgoldenrod;
+    padding: 15px 30px 15px 30px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+}
 #middleCenter {
     background-color: rgb(32, 45, 32);
     grid-area: ground;
     height: 40px;
-    border-left: 10px solid darkgoldenrod;
-    border-right: 10px solid darkgoldenrod;
+    border-bottom: 10px solid darkgoldenrod;
 }
 #top {
     grid-area: header;
-    border: 10px solid darkgoldenrod;
+    border-bottom: 10px solid darkgoldenrod;
     font-size: 50px;
     font-weight: bold;
     color: darkgoldenrod;
@@ -50,6 +65,7 @@ main {
 }
 #bottomRight {
     grid-area: bottom-right;
+    border-left: 10px solid darkgoldenrod;
 }
 #bottomLeft {
     grid-area: bottom-left;
