@@ -17,6 +17,22 @@ console.log("this is game height:\n", game.height)
 // get game context and declare it 2d
 const ctx = game.getContext('2d')
 
+// global vars to be defined later
+let intervalForGame
+let spawnHumanInt
+let spawnHumanTwoInt
+let spawnBoosterInt
+let spawnHighBoostInt
+let human
+let humanTwo
+let booster
+let highBooster
+
+let humanArray = []
+let humanTwoArray = []
+let boosterArray = []
+let highBoosterArray = []
+
 // create alien character using constructor (green)
 class Alien {
     constructor(x, y, color, width, height) {
@@ -53,7 +69,6 @@ class Alien {
     moveAlien() {
         if (this.y < game.height - 15) {
             this.y -= vy
-            // vy + gravity
         }
         if (this.direction.up) {
             this.y -= 20
@@ -86,6 +101,7 @@ class Alien {
         energy.innerText = `Energy: ${alien.energy}`
     }
 }
+
 // create human characters using constructor (red)
 class Human {
     constructor(x, y, color, width, height) {
@@ -104,17 +120,10 @@ class Human {
         else {
             this.x = (this.x) - 5
         }
-        // if (this.x > -40){
-        //     this.x = (this.x)-4
-        // }
-        // else if (this.x <= -20){
-        //     this.alive = false
-        // }
     }
     create = function () {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.width, this.height)
-        // ctx.beginPath(game.width, game.height)
     }
 }
 
@@ -143,16 +152,26 @@ class Booster {
     }
 }
 
-let human
-let humanTwo
-let booster
-let highBooster
+// clear game
+const stopGame = () => {
+    ctx.clearRect(0, 0, game.width, game.height)
+    startButton.style.visibility = "visible"
+    explainGame.style.visibility = "visible"
+    explainGame.innerText = "Another round?"
+    clearInterval(intervalForGame)
+    clearInterval(spawnHumanInt)
+    clearInterval(spawnHumanTwoInt)
+    clearInterval(spawnBoosterInt)
+    clearInterval(spawnHighBoostInt)
+    humanArray = []
+    humanTwoArray = []
+    boosterArray = []
+    highBoosterArray = []
+    alien.x = 15
+    alien.y = (game.height)-15
+}
 
-let humanArray = []
-let humanTwoArray = []
-let boosterArray = []
-let highBoosterArray = []
-
+// assign arguments for my alien
 let alien = new Alien(15, (game.height) - 15, "#148e55", 15, 15)
 
 // have multiple humans at random intervals
@@ -164,12 +183,12 @@ function spawnHumanTwo() {
     let humanTwo = new Human((game.width), (game.height) - 22, "#281359", 22, 22)
     humanTwoArray.push(humanTwo)
 }
+
 // have multiple boosters at random locations
 function spawnBooster() {
     let booster = new Booster((game.width), (game.height) - 25, "gold", 9, 9)
     booster.alive = true
     boosterArray.push(booster)
-    // console.log("this is spawnBooster")
 }
 function spawnHighBooster() {
     let highBooster = new Booster((game.width), (game.height) - 150, "gold", 9, 9)
@@ -187,7 +206,7 @@ const humanHit = () => {
             alien.x + alien.width > human.x &&
             alien.y < human.y + human.height &&
             alien.y + alien.height > human.y) {
-            alien.energy = (alien.energy) - 4
+            alien.energy = (alien.energy) - 3
             alien.color = "red"
             messageBoard.innerText = "Look out!"
             setTimeout(alienFlash, 400)
@@ -215,6 +234,7 @@ const gainBooster = () => {
             alien.y + alien.height > booster.y) {
             alien.energy = (alien.energy) + 10
             booster.alive = false
+            booster.x = -10
             messageBoard.innerText = "Way to go!"
         }
     })
@@ -225,10 +245,12 @@ const gainBooster = () => {
             alien.y + alien.height > highBooster.y) {
             alien.energy = (alien.energy) + 10
             highBooster.alive = false
+            highBooster.x = -10
             messageBoard.innerText = "Way to go!"
         }
     })
 }
+
 // define winning conditions
 // if energy level goes above threshold, you escape!
 // define losing conditions
@@ -244,7 +266,7 @@ const winOrLose = () => {
     }
 }
 
-// function to initiate motion on board, start game
+// game play function
 const playGame = () => {
     winOrLose()
     ctx.clearRect(0, 0, game.width, game.height)
@@ -254,83 +276,39 @@ const playGame = () => {
         human.create()
         human.moveHuman()
     })
-    // humanTwoArray.forEach(humanTwo =>{
-    //     humanTwo.create()
-    //     humanTwo.moveHuman()
-    // })
+    humanTwoArray.forEach(humanTwo =>{
+        humanTwo.create()
+        humanTwo.moveHuman()
+    })
     boosterArray.forEach(booster => {
         booster.create()
         booster.moveBooster()
         if (booster.alive) {
             gainBooster()
-            
         }
     })
     highBoosterArray.forEach(highBooster => {
         highBooster.create()
         highBooster.moveBooster()
+        if (highBooster.alive) {
+            gainBooster()   
+        }
     })
-    // gainBooster()   
     humanHit()
-    
-    // console.log("play game")
 }
-let intervalForGame
-let spawnHumanInt
-let spawnHumanTwoInt
-let spawnBoosterInt
-let spawnHighBoostInt
-// let gamePlay = true
+
+// start/restart button function
 const initiateGame = () => {
     startButton.style.visibility = "hidden"
     explainGame.style.visibility = "hidden"
     messageBoard.innerText = "Avoid the humans!"
     alien.energy = 50
-    alien.alive = true
-    // intervalForGame()
-    // spawnHumanInt()
-    // spawnHumanTwoInt()
-    // spawnBoosterInt()
-    // spawnHighBoostInt()
-    intervalForGame = setInterval(playGame, 50) 
-    spawnHumanInt = setInterval(spawnHuman, 2000) 
-    spawnHumanTwoInt = setInterval(spawnHumanTwo, 3740)
-    spawnBoosterInt = setInterval(spawnBooster, 1620) 
-    spawnHighBoostInt = setInterval(spawnHighBooster, 2770) 
-    // gamePlay = true
-    // setOrClearInterval()
-    // human.alive = true
-    // humanTwo.alive = true
-    // booster.alive = true
-    // highBooster.alive = true
-    // console.log('this is the human:\n', human)
+    intervalForGame = setInterval(playGame, 60)
+    spawnHumanInt = setInterval(spawnHuman, 3000)
+    spawnHumanTwoInt = setInterval(spawnHumanTwo, 5740)
+    spawnBoosterInt = setInterval(spawnBooster, 4620)
+    spawnHighBoostInt = setInterval(spawnHighBooster, 2770)
 }
-// clear game
-// restart button
-const stopGame = () => {
-    ctx.clearRect(0, 0, game.width, game.height)
-    startButton.style.visibility = "visible"
-    explainGame.style.visibility = "visible"
-    explainGame.innerText = "Another round?"
-    // gamePlay = false
-    // setOrClearInterval()
-    clearInterval(intervalForGame)
-    clearInterval(spawnHumanInt)
-    clearInterval(spawnHumanTwoInt)
-    clearInterval(spawnBoosterInt)
-    clearInterval(spawnHighBoostInt)
-    console.log("test")
-    // booster.alive = false
-    // human.alive = false
-    // console.log("human alive?\n", human)
-}
-
-// function setOrClearInterval () {
-// if (gamePlay == true){
-
-// } 
-// console.log("this is:\n", gamePlay)
-// }
 
 // set event listener for alien motion 
 document.addEventListener('keydown', (e) => {
@@ -341,5 +319,6 @@ document.addEventListener('keyup', (e) => {
         alien.stopAlienDirection(e.key)
     }
 })
+
 // set event listener for 'Play Game' button
 startButton.addEventListener('click', initiateGame)
