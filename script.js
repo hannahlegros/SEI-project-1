@@ -33,16 +33,41 @@ let humanTwoArray = []
 let boosterArray = []
 let highBoosterArray = []
 
+function Sound(src) {
+    this.sound = document.createElement('audio')
+    this.sound.src = src
+    this.sound.setAttribute('preload', 'auto')
+    this.sound.setAttribute('controls', 'none')
+    this.sound.style.display = 'none'
+    document.body.appendChild(this.sound)
+    this.play = function() {
+        this.sound.play()
+    }
+    this.stop = function() {
+        this.sound.pause()
+    }
+}
+
+let boosterSound = new Sound('sounds/booster.mp3')
+let losingSound = new Sound('sounds/losingTrumpet.mp3')
+let alienImg = new Image()
+let humanOneImg = new Image()
+let humanTwoImg = new Image()
+alienImg.src = ('img/alien.png')
+humanOneImg.src = ('img/human1.png')
+humanTwoImg.src = ('img/human2.png')
+
 // create alien character using constructor (green)
 class Alien {
-    constructor(x, y, color, width, height) {
-        this.x = x
-        this.y = y
-        this.color = color
-        this.width = width
-        this.height = height
-        this.alive = true
-        this.energy = 50
+    constructor(img, x, y, width, height) {
+        this.img = img,
+        this.x = x,
+        this.y = y,
+        // this.color = color
+        this.width = width,
+        this.height = height,
+        this.alive = true,
+        this.energy = 50,
         this.direction = {
             up: false,
             left: false,
@@ -95,22 +120,24 @@ class Alien {
             this.x = game.width - this.width
         }
     }
-    create = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+    render = function () {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+         // ctx.fillStyle = this.color
+         // ctx.fillRect(this.x, this.y, this.width, this.height)
         energy.innerText = `Energy: ${alien.energy}`
-    }
+     }
 }
 
 // create human characters using constructor (red)
 class Human {
-    constructor(x, y, color, width, height) {
+    constructor(img, x, y, width, height) {
+        this.img = img,
         this.x = x,
-            this.y = y,
-            this.color = color,
-            this.width = width,
-            this.height = height,
-            this.alive = true
+        this.y = y,
+        // this.color = color,
+        this.width = width,
+        this.height = height,
+        this.alive = true
     }
     // assign steady right to left motion to humans
     moveHuman() {
@@ -121,9 +148,10 @@ class Human {
             this.x = (this.x) - 5
         }
     }
-    create = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+    render = function () {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+        // ctx.fillStyle = this.color
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
 
@@ -146,7 +174,7 @@ class Booster {
             this.x = (this.x) - 5
         }
     }
-    create = function () {
+    render = function () {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
@@ -168,19 +196,19 @@ const stopGame = () => {
     boosterArray = []
     highBoosterArray = []
     alien.x = 15
-    alien.y = (game.height)-15
+    alien.y = (game.height)-27
 }
 
 // assign arguments for my alien
-let alien = new Alien(15, (game.height) - 15, "#148e55", 15, 15)
+let alien = new Alien(alienImg, 15, (game.height) -27, 15, 27)
 
 // have multiple humans at random intervals
 function spawnHuman() {
-    let human = new Human((game.width), (game.height - 20), "#730202", 20, 20)
+    let human = new Human(humanOneImg, (game.width), (game.height) - 30, 20, 30)
     humanArray.push(human)
 }
 function spawnHumanTwo() {
-    let humanTwo = new Human((game.width), (game.height) - 22, "#281359", 22, 22)
+    let humanTwo = new Human(humanTwoImg, (game.width), (game.height) - 22, 22, 22)
     humanTwoArray.push(humanTwo)
 }
 
@@ -198,18 +226,18 @@ function spawnHighBooster() {
 // create collision detection
 // alien hits human: deduct energy points, turn alien red momentarily
 const humanHit = () => {
-    let alienFlash = () => {
-        alien.color = "#148e55"
-    }
+    // let alienFlash = () => {
+    //     alien.color = "#148e55"
+    // }
     humanArray.forEach(human => {
         if (alien.x < human.x + human.width &&
             alien.x + alien.width > human.x &&
             alien.y < human.y + human.height &&
             alien.y + alien.height > human.y) {
             alien.energy = (alien.energy) - 3
-            alien.color = "red"
+            // alien.color = "red"
             messageBoard.innerText = "Look out!"
-            setTimeout(alienFlash, 400)
+            // setTimeout(alienFlash, 400)
         }
     })
     humanTwoArray.forEach(humanTwo => {
@@ -218,9 +246,9 @@ const humanHit = () => {
             alien.y < humanTwo.y + humanTwo.height &&
             alien.y + alien.height > humanTwo.y) {
             alien.energy = (alien.energy) - 4
-            alien.color = "red"
+            // alien.color = "red"
             messageBoard.innerText = "Look out!"
-            setTimeout(alienFlash, 400)
+            // setTimeout(alienFlash, 400)
         }
     })
 }
@@ -236,6 +264,7 @@ const gainBooster = () => {
             booster.alive = false
             booster.x = -10
             messageBoard.innerText = "Way to go!"
+            boosterSound.play
         }
     })
     highBoosterArray.forEach(highBooster => {
@@ -247,6 +276,7 @@ const gainBooster = () => {
             highBooster.alive = false
             highBooster.x = -10
             messageBoard.innerText = "Way to go!"
+            boosterSound.play
         }
     })
 }
@@ -263,6 +293,7 @@ const winOrLose = () => {
     else if (alien.energy <= 0) {
         messageBoard.innerText = "Oh no...you've been captured."
         stopGame()
+        losingSound.play()
     }
 }
 
@@ -270,25 +301,25 @@ const winOrLose = () => {
 const playGame = () => {
     winOrLose()
     ctx.clearRect(0, 0, game.width, game.height)
-    alien.create()
+    alien.render()
     alien.moveAlien()
     humanArray.forEach(human => {
-        human.create()
+        human.render()
         human.moveHuman()
     })
     humanTwoArray.forEach(humanTwo =>{
-        humanTwo.create()
+        humanTwo.render()
         humanTwo.moveHuman()
     })
     boosterArray.forEach(booster => {
-        booster.create()
+        booster.render()
         booster.moveBooster()
         if (booster.alive) {
             gainBooster()
         }
     })
     highBoosterArray.forEach(highBooster => {
-        highBooster.create()
+        highBooster.render()
         highBooster.moveBooster()
         if (highBooster.alive) {
             gainBooster()   
