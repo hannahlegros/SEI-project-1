@@ -21,11 +21,11 @@ const ctx = game.getContext('2d')
 class Alien {
     constructor(x, y, color, width, height) {
         this.x = x
-		this.y = y
-		this.color = color
-		this.width = width
-		this.height = height
-		this.alive = true
+        this.y = y
+        this.color = color
+        this.width = width
+        this.height = height
+        this.alive = true
         this.energy = 50
         this.direction = {
             up: false,
@@ -33,7 +33,7 @@ class Alien {
             down: false,
             right: false
         }
-	}
+    }
     // assign motion to alien (wasd)
     alienDirection(key) {
         if (key.toLowerCase() == 'w') this.direction.up = true
@@ -50,8 +50,8 @@ class Alien {
     // define boundaries for alien (edges of the board)
     // also assigning movement to key press event
     // apply gravity force to alien so they return to the ground after "jumping"
-    moveAlien () {
-        if (this.y < game.height-15) {
+    moveAlien() {
+        if (this.y < game.height - 15) {
             this.y -= vy
             // vy + gravity
         }
@@ -89,20 +89,20 @@ class Alien {
 // create human characters using constructor (red)
 class Human {
     constructor(x, y, color, width, height) {
-        this.x = x, 
-        this.y = y, 
-        this.color = color,
-        this.width = width,
-        this.height = height,
-        this.alive = true
+        this.x = x,
+            this.y = y,
+            this.color = color,
+            this.width = width,
+            this.height = height,
+            this.alive = true
     }
     // assign steady right to left motion to humans
-    moveHuman () {
-        if (this.y < (game.height - 21)){
-            this.x = (this.x)-4
+    moveHuman() {
+        if (this.y < (game.height - 21)) {
+            this.x = (this.x) - 4
         }
         else {
-            this.x = (this.x)-5
+            this.x = (this.x) - 5
         }
         // if (this.x > -40){
         //     this.x = (this.x)-4
@@ -121,20 +121,20 @@ class Human {
 // create boosters using constructor (yellow)
 class Booster {
     constructor(x, y, color, width, height) {
-        this.x = x, 
-        this.y = y, 
-        this.color = color,
-        this.width = width,
-        this.height = height,
-        this.alive = true
+        this.x = x,
+            this.y = y,
+            this.color = color,
+            this.width = width,
+            this.height = height,
+            this.alive = true
     }
     // assign steady right to left motion to boosters
-    moveBooster () {
-        if (this.y > game.height-50){
-            this.x = (this.x)-6
+    moveBooster() {
+        if (this.y > game.height - 50) {
+            this.x = (this.x) - 6
         }
         else {
-            this.x = (this.x)-5
+            this.x = (this.x) - 5
         }
     }
     create = function () {
@@ -152,169 +152,188 @@ let humanArray = []
 let humanTwoArray = []
 let boosterArray = []
 let highBoosterArray = []
-                    
-let alien = new Alien(15, (game.height)-15, "#148e55", 15, 15)
+
+let alien = new Alien(15, (game.height) - 15, "#148e55", 15, 15)
 
 // have multiple humans at random intervals
-function spawnHuman () {
-    let human = new Human((game.width), (game.height-20), "#730202", 20, 20)
+function spawnHuman() {
+    let human = new Human((game.width), (game.height - 20), "#730202", 20, 20)
     humanArray.push(human)
 }
-function spawnHumanTwo () {
-    let humanTwo = new Human((game.width), (game.height)-22, "#281359", 22, 22)
+function spawnHumanTwo() {
+    let humanTwo = new Human((game.width), (game.height) - 22, "#281359", 22, 22)
     humanTwoArray.push(humanTwo)
 }
 // have multiple boosters at random locations
-function spawnBooster () {
-    let booster = new Booster((game.width), (game.height)-25, "gold", 9, 9)
+function spawnBooster() {
+    let booster = new Booster((game.width), (game.height) - 25, "gold", 9, 9)
     booster.alive = true
     boosterArray.push(booster)
     // console.log("this is spawnBooster")
 }
-function spawnHighBooster () {
-    let highBooster = new Booster((game.width), (game.height)-150, "gold", 9, 9)
+function spawnHighBooster() {
+    let highBooster = new Booster((game.width), (game.height) - 150, "gold", 9, 9)
     highBoosterArray.push(highBooster)
 }
 
 // create collision detection
 // alien hits human: deduct energy points, turn alien red momentarily
 const humanHit = () => {
-    let alienFlash = () =>{
+    let alienFlash = () => {
         alien.color = "#148e55"
     }
-    humanArray.forEach(human =>{
+    humanArray.forEach(human => {
         if (alien.x < human.x + human.width &&
             alien.x + alien.width > human.x &&
             alien.y < human.y + human.height &&
-            alien.y + alien.height > human.y){
-                alien.energy = (alien.energy)-4
-                alien.color = "red"
-                messageBoard.innerText = "Look out!"
-                setTimeout(alienFlash, 400)
+            alien.y + alien.height > human.y) {
+            alien.energy = (alien.energy) - 4
+            alien.color = "red"
+            messageBoard.innerText = "Look out!"
+            setTimeout(alienFlash, 400)
         }
     })
-    humanTwoArray.forEach(humanTwo =>{
+    humanTwoArray.forEach(humanTwo => {
         if (alien.x < humanTwo.x + humanTwo.width &&
             alien.x + alien.width > humanTwo.x &&
             alien.y < humanTwo.y + humanTwo.height &&
-            alien.y + alien.height > humanTwo.y){
-                alien.energy = (alien.energy)-4
-                alien.color = "red"
-                messageBoard.innerText = "Look out!"
-                setTimeout(alienFlash, 400)
+            alien.y + alien.height > humanTwo.y) {
+            alien.energy = (alien.energy) - 4
+            alien.color = "red"
+            messageBoard.innerText = "Look out!"
+            setTimeout(alienFlash, 400)
         }
     })
 }
 
 // alien hits booster: add energy points, make booster disapper
 const gainBooster = () => {
-    boosterArray.forEach(booster =>{
+    boosterArray.forEach(booster => {
         if (alien.x < booster.x + booster.width &&
             alien.x + alien.width > booster.x &&
             alien.y < booster.y + booster.height &&
-            alien.y + alien.height > booster.y){
-                alien.energy = (alien.energy)+10
-                booster.alive = false
-                messageBoard.innerText = "Way to go!"
+            alien.y + alien.height > booster.y) {
+            alien.energy = (alien.energy) + 10
+            booster.alive = false
+            messageBoard.innerText = "Way to go!"
         }
     })
-    highBoosterArray.forEach(highBooster =>{
+    highBoosterArray.forEach(highBooster => {
         if (alien.x < highBooster.x + highBooster.width &&
             alien.x + alien.width > highBooster.x &&
             alien.y < highBooster.y + highBooster.height &&
-            alien.y + alien.height > highBooster.y){
-                alien.energy = (alien.energy)+10
-                highBooster.alive = false
-                messageBoard.innerText = "Way to go!"
+            alien.y + alien.height > highBooster.y) {
+            alien.energy = (alien.energy) + 10
+            highBooster.alive = false
+            messageBoard.innerText = "Way to go!"
         }
     })
 }
-       
-// function to initiate motion on board, start game
-const playGame = () => {
-    ctx.clearRect(0, 0, game.width, game.height)
-    alien.create()
-    alien.moveAlien()
-    humanArray.forEach(human =>{
-        human.create()
-        human.moveHuman()
-    })
-    humanTwoArray.forEach(humanTwo =>{
-        humanTwo.create()
-        humanTwo.moveHuman()
-    })
-    boosterArray.forEach(booster =>{
-        booster.create()
-        booster.moveBooster()
-    })
-    highBoosterArray.forEach(highBooster =>{
-        highBooster.create()
-        highBooster.moveBooster()
-    })
-    gainBooster()   
-    humanHit()
-    winOrLose()
-}
-
-const initiateGame = () =>{
-    startButton.style.visibility = "hidden"
-    explainGame.style.visibility = "hidden"
-    messageBoard.innerText = "Avoid the humans!"
-    const intervalForGame = setInterval(playGame, 50)
-    alien.energy = 50
-    alien.alive = true
-    // human.alive = true
-    // humanTwo.alive = true
-    // booster.alive = true
-    // highBooster.alive = true
-    // console.log('this is the human:\n', human)
-    const spawnHumanInt = setInterval(spawnHuman, 2000)
-    const spawnHumanTwoInt = setInterval(spawnHumanTwo, 3740)
-    const spawnBoosterInt = setInterval(spawnBooster, 1620)
-    const spawnHighBoostInt = setInterval(spawnHighBooster, 2770)
-} 
-
 // define winning conditions
 // if energy level goes above threshold, you escape!
 // define losing conditions
 // if energy level goes below threshold, you are captured :(
 const winOrLose = () => {
-    if (alien.energy >= 100){
+    if (alien.energy >= 100) {
         messageBoard.innerText = "Yay! You escaped the humans!"
         stopGame()
     }
-    else if (alien.energy <= 0){
+    else if (alien.energy <= 0) {
         messageBoard.innerText = "Oh no...you've been captured."
         stopGame()
     }
 }
 
+// function to initiate motion on board, start game
+const playGame = () => {
+    ctx.clearRect(0, 0, game.width, game.height)
+    alien.create()
+    alien.moveAlien()
+    humanArray.forEach(human => {
+        human.create()
+        human.moveHuman()
+    })
+    // humanTwoArray.forEach(humanTwo =>{
+    //     humanTwo.create()
+    //     humanTwo.moveHuman()
+    // })
+    boosterArray.forEach(booster => {
+        booster.create()
+        booster.moveBooster()
+        if (booster.alive) {
+            gainBooster()
+            booster.alive = false
+        }
+    })
+    highBoosterArray.forEach(highBooster => {
+        highBooster.create()
+        highBooster.moveBooster()
+    })
+    // gainBooster()   
+    humanHit()
+    winOrLose()
+}
+
+// let gamePlay = true
+const initiateGame = () => {
+    startButton.style.visibility = "hidden"
+    explainGame.style.visibility = "hidden"
+    messageBoard.innerText = "Avoid the humans!"
+    alien.energy = 50
+    alien.alive = true
+    intervalForGame()
+    spawnHumanInt()
+    spawnHumanTwoInt()
+    spawnBoosterInt()
+    spawnHighBoostInt()
+    // gamePlay = true
+    // setOrClearInterval()
+    // human.alive = true
+    // humanTwo.alive = true
+    // booster.alive = true
+    // highBooster.alive = true
+    // console.log('this is the human:\n', human)
+}
+const intervalForGame = () => { setInterval(playGame, 50) }
+const spawnHumanInt = () => { setInterval(spawnHuman, 2000) }
+const spawnHumanTwoInt = () => { setInterval(spawnHumanTwo, 3740) }
+const spawnBoosterInt = () => { setInterval(spawnBooster, 1620) }
+const spawnHighBoostInt = () => { setInterval(spawnHighBooster, 2770) }
 // clear game
 // restart button
-const stopGame = (intervalForGame, spawnHumanInt, spawnHumanTwoInt, spawnBoosterInt, spawnHighBoostInt) => {
+const stopGame = () => {
+    ctx.clearRect(0, 0, game.width, game.height)
+    startButton.style.visibility = "visible"
+    explainGame.style.visibility = "visible"
+    explainGame.innerText = "Another round?"
+    // gamePlay = false
+    // setOrClearInterval()
     clearInterval(intervalForGame)
     clearInterval(spawnHumanInt)
     clearInterval(spawnHumanTwoInt)
     clearInterval(spawnBoosterInt)
     clearInterval(spawnHighBoostInt)
-    ctx.clearRect(0, 0, game.width, game.height)
-    startButton.style.visibility = "visible"
-    explainGame.style.visibility = "visible"
-    explainGame.innerText = "Another round?"
+    console.log("test")
     // booster.alive = false
     // human.alive = false
     // console.log("human alive?\n", human)
 }
+
+// function setOrClearInterval () {
+// if (gamePlay == true){
+
+// } 
+// console.log("this is:\n", gamePlay)
+// }
 
 // set event listener for alien motion 
 document.addEventListener('keydown', (e) => {
     alien.alienDirection(e.key)
 })
 document.addEventListener('keyup', (e) => {
-    if(['w', 'a', 's', 'd'].includes(e.key)) {
+    if (['w', 'a', 's', 'd'].includes(e.key)) {
         alien.stopAlienDirection(e.key)
     }
 })
-
 // set event listener for 'Play Game' button
 startButton.addEventListener('click', initiateGame)
