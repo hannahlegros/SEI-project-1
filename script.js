@@ -246,6 +246,7 @@ const winOrLose = () => {
 
 // function to initiate motion on board, start game
 const playGame = () => {
+    winOrLose()
     ctx.clearRect(0, 0, game.width, game.height)
     alien.create()
     alien.moveAlien()
@@ -262,7 +263,7 @@ const playGame = () => {
         booster.moveBooster()
         if (booster.alive) {
             gainBooster()
-            booster.alive = false
+            
         }
     })
     highBoosterArray.forEach(highBooster => {
@@ -271,9 +272,14 @@ const playGame = () => {
     })
     // gainBooster()   
     humanHit()
-    winOrLose()
+    
+    // console.log("play game")
 }
-
+let intervalForGame
+let spawnHumanInt
+let spawnHumanTwoInt
+let spawnBoosterInt
+let spawnHighBoostInt
 // let gamePlay = true
 const initiateGame = () => {
     startButton.style.visibility = "hidden"
@@ -281,11 +287,16 @@ const initiateGame = () => {
     messageBoard.innerText = "Avoid the humans!"
     alien.energy = 50
     alien.alive = true
-    intervalForGame()
-    spawnHumanInt()
-    spawnHumanTwoInt()
-    spawnBoosterInt()
-    spawnHighBoostInt()
+    // intervalForGame()
+    // spawnHumanInt()
+    // spawnHumanTwoInt()
+    // spawnBoosterInt()
+    // spawnHighBoostInt()
+    intervalForGame = setInterval(playGame, 50) 
+    spawnHumanInt = setInterval(spawnHuman, 2000) 
+    spawnHumanTwoInt = setInterval(spawnHumanTwo, 3740)
+    spawnBoosterInt = setInterval(spawnBooster, 1620) 
+    spawnHighBoostInt = setInterval(spawnHighBooster, 2770) 
     // gamePlay = true
     // setOrClearInterval()
     // human.alive = true
@@ -294,11 +305,6 @@ const initiateGame = () => {
     // highBooster.alive = true
     // console.log('this is the human:\n', human)
 }
-const intervalForGame = () => { setInterval(playGame, 50) }
-const spawnHumanInt = () => { setInterval(spawnHuman, 2000) }
-const spawnHumanTwoInt = () => { setInterval(spawnHumanTwo, 3740) }
-const spawnBoosterInt = () => { setInterval(spawnBooster, 1620) }
-const spawnHighBoostInt = () => { setInterval(spawnHighBooster, 2770) }
 // clear game
 // restart button
 const stopGame = () => {
