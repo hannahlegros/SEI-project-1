@@ -50,6 +50,7 @@ function Sound(src) {
 
 let boosterSound = new Sound('sounds/booster.mp3')
 let losingSound = new Sound('sounds/losingTrumpet.mp3')
+let backgroundMusic = new Sound('sounds/arcadebackground.mp3')
 let alienImg = new Image()
 let humanOneImg = new Image()
 let humanTwoImg = new Image()
@@ -182,6 +183,7 @@ class Booster {
 
 // clear game
 const stopGame = () => {
+    backgroundMusic.stop()
     ctx.clearRect(0, 0, game.width, game.height)
     startButton.style.visibility = "visible"
     explainGame.style.visibility = "visible"
@@ -330,6 +332,7 @@ const playGame = () => {
 
 // start/restart button function
 const initiateGame = () => {
+    backgroundMusic.play()
     startButton.style.visibility = "hidden"
     explainGame.style.visibility = "hidden"
     messageBoard.innerText = "Avoid the humans!"
