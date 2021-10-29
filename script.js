@@ -34,11 +34,11 @@ let boosterArray = []
 let highBoosterArray = []
 
 function Sound(src) {
-    this.sound = document.createElement('audio')
+    this.sound = document.createElement("audio")
     this.sound.src = src
-    this.sound.setAttribute('preload', 'auto')
-    this.sound.setAttribute('controls', 'none')
-    this.sound.style.display = 'none'
+    this.sound.setAttribute("preload", "auto")
+    this.sound.setAttribute("controls", "none")
+    this.sound.style.display = "none"
     document.body.appendChild(this.sound)
     this.play = function() {
         this.sound.play()
@@ -48,16 +48,20 @@ function Sound(src) {
     }
 }
 
-let boosterSound = new Sound('sounds/collectcoin.mp3')
-let losingSound = new Sound('sounds/losingTrumpet.mp3')
-let backgroundMusic = new Sound('sounds/arcadebackground.mp3')
-let winningSound = new Sound ('sounds/winningfanfare.mp3')
+// image and sound vars
+let boosterSound = new Sound("sounds/collectcoin.mp3")
+let losingSound = new Sound("sounds/losingTrumpet.mp3")
+let backgroundMusic = new Sound("sounds/arcadebackground.mp3")
+let winningSound = new Sound ("sounds/winning.mp3")
+let collisionSound = new Sound("sounds/collision.mp3")
 let alienImg = new Image()
 let humanOneImg = new Image()
 let humanTwoImg = new Image()
-alienImg.src = ('img/alien.png')
-humanOneImg.src = ('img/human1.png')
-humanTwoImg.src = ('img/human2.png')
+let boosterImg = new Image()
+alienImg.src = ("img/alien.png")
+humanOneImg.src = ("img/human1.png")
+humanTwoImg.src = ("img/human2.png")
+boosterImg.src = ("img/boostercoin.png")
 
 // create alien character using constructor (green)
 class Alien {
@@ -65,7 +69,6 @@ class Alien {
         this.img = img,
         this.x = x,
         this.y = y,
-        // this.color = color
         this.width = width,
         this.height = height,
         this.alive = true,
@@ -124,8 +127,6 @@ class Alien {
     }
     render = function () {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
-         // ctx.fillStyle = this.color
-         // ctx.fillRect(this.x, this.y, this.width, this.height)
         energy.innerText = `Energy: ${alien.energy}`
      }
 }
@@ -136,36 +137,33 @@ class Human {
         this.img = img,
         this.x = x,
         this.y = y,
-        // this.color = color,
         this.width = width,
         this.height = height,
         this.alive = true
     }
     // assign steady right to left motion to humans
     moveHuman() {
-        if (this.y < (game.height - 25)) {
+        if (this.y < (game.height - 29)) {
             this.x = (this.x) - 3
         }
         else {
-            this.x = (this.x) - 7
+            this.x = (this.x) - 5
         }
     }
     render = function () {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
-        // ctx.fillStyle = this.color
-        // ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
 
 // create boosters using constructor (yellow)
 class Booster {
-    constructor(x, y, color, width, height) {
+    constructor(img, x, y, width, height) {
+        this.img = img,
         this.x = x,
-            this.y = y,
-            this.color = color,
-            this.width = width,
-            this.height = height,
-            this.alive = true
+        this.y = y,
+        this.width = width,
+        this.height = height,
+        this.alive = true
     }
     // assign steady right to left motion to boosters
     moveBooster() {
@@ -177,8 +175,7 @@ class Booster {
         }
     }
     render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
     }
 }
 
@@ -211,36 +208,31 @@ function spawnHuman() {
     humanArray.push(human)
 }
 function spawnHumanTwo() {
-    let humanTwo = new Human(humanTwoImg, (game.width), (game.height) - 22, 22, 22)
+    let humanTwo = new Human(humanTwoImg, (game.width), (game.height) - 27, 24, 27)
     humanTwoArray.push(humanTwo)
 }
 
 // have multiple boosters at random locations
 function spawnBooster() {
-    let booster = new Booster((game.width), (game.height) - 25, "gold", 9, 9)
-    booster.alive = true
+    let booster = new Booster(boosterImg, (game.width), (game.height) - 25, 9, 9)
     boosterArray.push(booster)
 }
 function spawnHighBooster() {
-    let highBooster = new Booster((game.width), (game.height) - 150, "gold", 9, 9)
+    let highBooster = new Booster(boosterImg, (game.width), (game.height) - 150, 9, 9)
     highBoosterArray.push(highBooster)
 }
 
 // create collision detection
 // alien hits human: deduct energy points, turn alien red momentarily
 const humanHit = () => {
-    // let alienFlash = () => {
-    //     alien.color = "#148e55"
-    // }
     humanArray.forEach(human => {
         if (alien.x < human.x + human.width &&
             alien.x + alien.width > human.x &&
             alien.y < human.y + human.height &&
             alien.y + alien.height > human.y) {
             alien.energy = (alien.energy) - 3
-            // alien.color = "red"
             messageBoard.innerText = "Look out!"
-            // setTimeout(alienFlash, 400)
+            collisionSound.play()
         }
     })
     humanTwoArray.forEach(humanTwo => {
@@ -249,9 +241,8 @@ const humanHit = () => {
             alien.y < humanTwo.y + humanTwo.height &&
             alien.y + alien.height > humanTwo.y) {
             alien.energy = (alien.energy) - 4
-            // alien.color = "red"
             messageBoard.innerText = "Look out!"
-            // setTimeout(alienFlash, 400)
+            collisionSound.play()
         }
     })
 }
@@ -275,7 +266,7 @@ const gainBooster = () => {
             alien.x + alien.width > highBooster.x &&
             alien.y < highBooster.y + highBooster.height &&
             alien.y + alien.height > highBooster.y) {
-            alien.energy = (alien.energy) + 10
+            alien.energy = (alien.energy) + 5
             highBooster.alive = false
             highBooster.x = -10
             messageBoard.innerText = "Way to go!"
@@ -340,7 +331,7 @@ const initiateGame = () => {
     messageBoard.innerText = "Avoid the humans!"
     alien.energy = 50
     intervalForGame = setInterval(playGame, 60)
-    spawnHumanInt = setInterval(spawnHuman, 3000)
+    spawnHumanInt = setInterval(spawnHuman, 2490)
     spawnHumanTwoInt = setInterval(spawnHumanTwo, 5740)
     spawnBoosterInt = setInterval(spawnBooster, 4620)
     spawnHighBoostInt = setInterval(spawnHighBooster, 2770)
