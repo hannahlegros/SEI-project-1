@@ -48,9 +48,10 @@ function Sound(src) {
     }
 }
 
-let boosterSound = new Sound('sounds/booster.mp3')
+let boosterSound = new Sound('sounds/collectcoin.mp3')
 let losingSound = new Sound('sounds/losingTrumpet.mp3')
 let backgroundMusic = new Sound('sounds/arcadebackground.mp3')
+let winningSound = new Sound ('sounds/winningfanfare.mp3')
 let alienImg = new Image()
 let humanOneImg = new Image()
 let humanTwoImg = new Image()
@@ -142,11 +143,11 @@ class Human {
     }
     // assign steady right to left motion to humans
     moveHuman() {
-        if (this.y < (game.height - 21)) {
-            this.x = (this.x) - 4
+        if (this.y < (game.height - 25)) {
+            this.x = (this.x) - 3
         }
         else {
-            this.x = (this.x) - 5
+            this.x = (this.x) - 7
         }
     }
     render = function () {
@@ -169,10 +170,10 @@ class Booster {
     // assign steady right to left motion to boosters
     moveBooster() {
         if (this.y > game.height - 50) {
-            this.x = (this.x) - 6
+            this.x = (this.x) - 4
         }
         else {
-            this.x = (this.x) - 5
+            this.x = (this.x) - 6
         }
     }
     render = function () {
@@ -266,7 +267,7 @@ const gainBooster = () => {
             booster.alive = false
             booster.x = -10
             messageBoard.innerText = "Way to go!"
-            boosterSound.play
+            boosterSound.play()
         }
     })
     highBoosterArray.forEach(highBooster => {
@@ -278,7 +279,7 @@ const gainBooster = () => {
             highBooster.alive = false
             highBooster.x = -10
             messageBoard.innerText = "Way to go!"
-            boosterSound.play
+            boosterSound.play()
         }
     })
 }
@@ -291,6 +292,7 @@ const winOrLose = () => {
     if (alien.energy >= 100) {
         messageBoard.innerText = "Yay! You escaped the humans!"
         stopGame()
+        winningSound.play()
     }
     else if (alien.energy <= 0) {
         messageBoard.innerText = "Oh no...you've been captured."
@@ -324,7 +326,7 @@ const playGame = () => {
         highBooster.render()
         highBooster.moveBooster()
         if (highBooster.alive) {
-            gainBooster()   
+            gainBooster()
         }
     })
     humanHit()
