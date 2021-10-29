@@ -281,7 +281,7 @@ const gainBooster = () => {
 // if energy level goes below threshold, you are captured :(
 const winOrLose = () => {
     if (alien.energy >= 100) {
-        messageBoard.innerText = "Yay! You escaped the humans!"
+        messageBoard.innerText = "Yay!! You escaped!!"
         stopGame()
         winningSound.play()
     }
