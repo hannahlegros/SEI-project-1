@@ -2,7 +2,11 @@
 
 ## What's going on?
 
-You've been left behind on a strange planet. These weird, ugly creatures that call themselves "humans" keep trying to take you to a place called "Area 51". Avoid the humans so they don't steal your energy and pick up boosters along the way to keep up your energy. If you reach the energy threshold, you will stay alive long enough for your fam to show up. Lose all your energy and you'll be captured by the humans and sent to Area 51. 
+You've been left behind on a strange planet. These weird, ugly creatures that call themselves "humans" keep trying to take you to a place called "Area 51". Avoid the humans so they don't steal your energy and pick up boosters along the way to keep up your energy. Boost your energy up high enough and you will stay alive long enough to escape. Lose all your energy and you'll be captured by the humans and sent to Area 51. 
+
+## Deployment URL
+
+https://hannahlegros.github.io/SEI-project-1/
 
 ## Tech Stack
 

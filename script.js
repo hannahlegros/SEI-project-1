@@ -1,3 +1,5 @@
+// GAME VARIABLES
+
 const game = document.getElementById("canvas")
 // save the bottomLeft square as a var for energy level tracker
 const energy = document.getElementById("bottomLeft")
@@ -33,21 +35,6 @@ let humanTwoArray = []
 let boosterArray = []
 let highBoosterArray = []
 
-function Sound(src) {
-    this.sound = document.createElement("audio")
-    this.sound.src = src
-    this.sound.setAttribute("preload", "auto")
-    this.sound.setAttribute("controls", "none")
-    this.sound.style.display = "none"
-    document.body.appendChild(this.sound)
-    this.play = function() {
-        this.sound.play()
-    }
-    this.stop = function() {
-        this.sound.pause()
-    }
-}
-
 // image and sound vars
 let boosterSound = new Sound("sounds/collectcoin.mp3")
 let losingSound = new Sound("sounds/losingTrumpet.mp3")
@@ -63,7 +50,25 @@ humanOneImg.src = ("img/human1.png")
 humanTwoImg.src = ("img/human2.png")
 boosterImg.src = ("img/boostercoin.png")
 
-// create alien character using constructor (green)
+// FUNCTION TO RUN BACKGROUND NOISES
+function Sound(src) {
+    this.sound = document.createElement("audio")
+    this.sound.src = src
+    this.sound.setAttribute("preload", "auto")
+    this.sound.setAttribute("controls", "none")
+    this.sound.style.display = "none"
+    document.body.appendChild(this.sound)
+    this.play = function() {
+        this.sound.play()
+    }
+    this.stop = function() {
+        this.sound.pause()
+    }
+}
+
+// CONSTRUCTOR CLASSES
+
+// create constructor for alien, main character
 class Alien {
     constructor(img, x, y, width, height) {
         this.img = img,
@@ -131,7 +136,7 @@ class Alien {
      }
 }
 
-// create human characters using constructor (red)
+// create human characters using constructor, bad guys
 class Human {
     constructor(img, x, y, width, height) {
         this.img = img,
@@ -155,7 +160,7 @@ class Human {
     }
 }
 
-// create boosters using constructor (yellow)
+// create boosters using constructor, yellow coins to gain energy
 class Booster {
     constructor(img, x, y, width, height) {
         this.img = img,
@@ -179,7 +184,9 @@ class Booster {
     }
 }
 
-// clear game
+// GAME FUNCTIONS
+
+// clear game when win/lose conditions are met 
 const stopGame = () => {
     backgroundMusic.stop()
     ctx.clearRect(0, 0, game.width, game.height)
@@ -199,10 +206,27 @@ const stopGame = () => {
     alien.y = (game.height)-27
 }
 
-// assign arguments for my alien
+// define winning conditions
+// if energy level goes above threshold, you escape!
+// define losing conditions
+// if energy level goes below threshold, you are captured :(
+const winOrLose = () => {
+    if (alien.energy >= 100) {
+        messageBoard.innerText = "Yay!! You escaped!!"
+        stopGame()
+        winningSound.play()
+    }
+    else if (alien.energy <= 0) {
+        messageBoard.innerText = "Oh no...you've been captured."
+        stopGame()
+        losingSound.play()
+    }
+}
+
+// assign attributes for alien
 let alien = new Alien(alienImg, 15, (game.height) -27, 15, 27)
 
-// have multiple humans at random intervals
+// assign attributes to humans and multiply them
 function spawnHuman() {
     let human = new Human(humanOneImg, (game.width), (game.height) - 30, 20, 30)
     humanArray.push(human)
@@ -212,7 +236,7 @@ function spawnHumanTwo() {
     humanTwoArray.push(humanTwo)
 }
 
-// have multiple boosters at random locations
+// assign attributes to boosters and multiply them
 function spawnBooster() {
     let booster = new Booster(boosterImg, (game.width), (game.height) - 25, 9, 9)
     boosterArray.push(booster)
@@ -275,24 +299,7 @@ const gainBooster = () => {
     })
 }
 
-// define winning conditions
-// if energy level goes above threshold, you escape!
-// define losing conditions
-// if energy level goes below threshold, you are captured :(
-const winOrLose = () => {
-    if (alien.energy >= 100) {
-        messageBoard.innerText = "Yay!! You escaped!!"
-        stopGame()
-        winningSound.play()
-    }
-    else if (alien.energy <= 0) {
-        messageBoard.innerText = "Oh no...you've been captured."
-        stopGame()
-        losingSound.play()
-    }
-}
-
-// game play function
+// game play function (loops through due to assigned interval in initiateGame func)
 const playGame = () => {
     winOrLose()
     ctx.clearRect(0, 0, game.width, game.height)
@@ -323,19 +330,21 @@ const playGame = () => {
     humanHit()
 }
 
-// start/restart button function
+// start/restart button function (called from event listener)
 const initiateGame = () => {
     backgroundMusic.play()
     startButton.style.visibility = "hidden"
     explainGame.style.visibility = "hidden"
     messageBoard.innerText = "Avoid the humans!"
     alien.energy = 50
-    intervalForGame = setInterval(playGame, 60)
-    spawnHumanInt = setInterval(spawnHuman, 2490)
-    spawnHumanTwoInt = setInterval(spawnHumanTwo, 5740)
+    intervalForGame = setInterval(playGame, 70)
+    spawnHumanInt = setInterval(spawnHuman, 3490)
+    spawnHumanTwoInt = setInterval(spawnHumanTwo, 6740)
     spawnBoosterInt = setInterval(spawnBooster, 4620)
     spawnHighBoostInt = setInterval(spawnHighBooster, 2770)
 }
+
+// EVENT LISTENERS
 
 // set event listener for alien motion 
 document.addEventListener('keydown', (e) => {
