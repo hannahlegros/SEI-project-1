@@ -15,6 +15,8 @@ game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
 console.log("this is game width:\n", game.width)
 console.log("this is game height:\n", game.height)
+energy.style.visibility = "hidden"
+messageBoard.style.visibility = "hidden"
 
 // get game context and declare it 2d
 const ctx = game.getContext('2d')
@@ -335,6 +337,8 @@ const initiateGame = () => {
     backgroundMusic.play()
     startButton.style.visibility = "hidden"
     explainGame.style.visibility = "hidden"
+    energy.style.visibility = "visible"
+    messageBoard.style.visibility = "visible"
     messageBoard.innerText = "Avoid the humans!"
     alien.energy = 50
     intervalForGame = setInterval(playGame, 70)
